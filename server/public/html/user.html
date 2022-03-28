@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="974557972870-ai1nmveefp67n6s72poiabj976qbmfi4.apps.googleusercontent.com">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
+    <script src="https://kit.fontawesome.com/f139e98952.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/user-css.css">
+    <title>Comfy - Your ez shopping site</title>
+</head>
+<body>
+    <div id="user">
+        <header>
+            <div class="logo">
+                <h2>Comfy</h2>
+            </div>
+            <nav id="menu" class="menu">
+                <a href="/" class="btn">Home</a>
+                <a href="/about" class="btn">About</a>
+                <a href="/categories" class="btn">Categories</a>
+                <a href="/cart" class="btn"><i class="fas fa-shopping-cart"></i><span v-if="cartLength != 0"> {{cartLength}}</span></a>
+                <a v-if="thisUser.userid != undefined" href="/user" class="btn active"><i class="fas fa-user"></i> {{ thisUser.first_name }}</a>
+                <div id="google-signin-button" class="g-signin2 btn" data-width="250" data-height="25" data-longtitle="true"></div>
+            </nav>
+        </header>
+        <main>
+            <div class="userButtons">
+                <button class="btn btn-update" v-if="thisUser.userid != null" @click="onSignOut">Logout</button>
+            <button class="btn btn-update" v-if="thisUser.userid != null" data-bs-toggle="modal" data-bs-target="#updateUser" @click="updateUserPlaceholders()">Update My User</button>
+            </div>
+            <div v-if="thisUser.userid != null && thisUser.roles == 'Admin'">
+               <div class="container-wrapper">
+                   
+                    <div class="customer container">
+                        <h3>Customers</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Customer</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-rows" v-for="customer in customers" :key="customer.cusid">
+                                <tr>
+                                    <td>{{customer.cusid}}</td>
+                                    <td>{{customer.first_name}} {{customer.last_name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tables container">
+                        <div class="product container">
+                            <div class="productButtons">
+                                <h3>Products</h3>
+                                <button class="btn" data-bs-toggle="modal" data-bs-target="#addProduct">Add Product</button>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Products</th>
+                                        <th scope="col">Category</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-rows" v-for="product in products" :key="product.pid">
+                                    <tr>
+                                        <td><img class="thumbnail" :src="product.picture"></td>
+                                        <td><a :href="'/product/' + product.pid">{{product.pname}}</a></td>
+                                        <td>{{categories.find(e => e.catid == product.catid).catName}}</td>
+                                        <td><button class="btn" data-bs-toggle="modal" data-bs-target="#editDeal" @click="openDealModal(product.pid)">Deal</button></td>
+                                        <td><button class="btn" data-bs-toggle="modal" data-bs-target="#editProduct" @click="getPlaceholders(product.pid)">Edit</button></td>
+                                        <td><button class="btn" @click="delProduct(product.pid)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="order container">
+                            <h3>Orders</h3>
+                            <div class="accordion accordion-flush" id="accordionAdmin" v-for="order in orders">
+                                <div class="item">
+                                    <h2 class="item-header" id="headingAdmin">
+                                        <button class="item-button btn btn-link" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseOrd' + order.ordid" aria-expanded="true" aria-controls="collapseOne">
+                                        <h6>#{{order.ordid}}</h6>
+                                        <h6>{{customers.find(e => e.cusid == order.cusid).first_name}}</h6>
+                                        </button>
+                                    </h2>
+                                    <div :id="'collapseOrd' + order.ordid" class="accordion-collapse collapse" aria-labelledby="headingAdmin" data-bs-parent="#accordionAdmin">
+                                        <div class="accordion-body">
+                                            <strong>{{order.date}}</strong>
+                                            <div class="accordion-product" v-for="item in order.items" :key="item.pid">
+                                                <h6>x{{item.quantity}}</h6> 
+                                                <h6>{{item.pname}}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating container" hidden="true">
+                            <h4>Ratings</h4>
+                            <div class="accordion accordion-flush" id="accordionRatings" v-for="rating in ratings">
+                                <div class="item">
+                                    <h2 class="item-header" id="headingRatings">
+                                        <button data-v-123 class="item-button btn btn-link" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseRat' + rating.ratid" aria-expanded="true" aria-controls="collapseOne">
+                                        <h6>{{ products.find(e => e.pid == rating.pid).pname }}</h6>
+                                        </button>
+                                    </h2>
+                                    <div :id="'collapseRat' + rating.ratid" class="accordion-collapse collapse" aria-labelledby="headingRatings" data-bs-parent="#accordionCustomer">
+                                        <div class="accordion-body">
+                                            <strong>{{rating.score}} / 5</strong>
+                                            <p>{{rating.comment}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--CUSTOMER VIEW-->
+            <div v-if="thisUser.userid != null && thisUser.roles == 'Customer'" >
+                <div class="order container">
+                    <h4>Orders</h4>
+                    <div class="accordion accordion-flush" id="accordionCustomer" v-for="order in orders">
+                        <div class="item">
+                            <h2 class="item-header" id="headingCustomer">
+                                <button class="item-button btn btn-link" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseOrd' + order.ordid" aria-expanded="true" aria-controls="collapseOne">
+                                <h6>#{{order.ordid}}</h6>
+                                </button>
+                            </h2>
+                            <div :id="'collapseOrd' + order.ordid" class="accordion-collapse collapse" aria-labelledby="headingCustomer" data-bs-parent="#accordionCustomer">
+                                <div class="accordion-body">
+                                    <strong>{{order.date}}</strong>
+                                    <div class="accordion-product" v-for="item in order.items" :key="item.pid">
+                                        <h6>x{{item.quantity}}</h6> 
+                                        <h6>{{item.pname}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating container">
+                    <h4>Ratings</h4>
+                    <div class="accordion accordion-flush" id="accordionRatingsCustomer" v-for="rating in ratings">
+                        <div class="item">
+                            <h2 class="item-header" id="headingRatingsCustomer">
+                                <button class="item-button btn btn-link" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseRat' + rating.ratid" aria-expanded="true" aria-controls="collapseOne">
+                                <h6>{{ products.find(e => e.pid == rating.pid).pname }}</h6>
+                                </button>
+                            </h2>
+                            <div :id="'collapseRat' + rating.ratid" class="accordion-collapse collapse" aria-labelledby="headingRatingCustomer" data-bs-parent="#accordionCustomer">
+                                <div class="accordion-body">
+                                    <strong>{{rating.score}} / 5</strong>
+                                    <p>{{rating.comment}}</p>
+                                    <button class="btn" @click="delRating(rating.ratid)">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Update User Modal-->
+            <div class="modal fade" id="updateUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div id="updateUserContent" class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="updateFirstname" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="updateFirstname" placeholder="First Name" name="first_name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="updateLastname" class="form-label">Last Name</label>
+                                <input class="form-control" id="updateLastname" placeholder="Last Name" name="updateLastname">
+                            </div>
+                            <div class="mb-3">
+                                <label for="updateEmail" class="form-label">E-mail</label>
+                                <input type="text" class="form-control" id="updateEmail" placeholder="Email" name="email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="updateAddress" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="updateAddress" placeholder="Address" name="address">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="updateCustomer()">Update My user</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <iframe style="display: none;" name="dummyiframe"></iframe>
+            <!--ADD PRODUCT MODAL-->
+            <div class="modal fade" id="addProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form id="addForm" class="modal-content" action="/api/product" method="post" enctype="multipart/form-data" target="dummyiframe">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="addName" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="addName" placeholder="Name" name="pname">
+                            </div>
+                            <div class="mb-3">
+                                <label for="addDescription" class="form-label">Description: </label>
+                                <textarea class="form-control" id="addDescription" placeholder="Enter Product Description" name="pdescription"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addPrice" class="form-label">Price</label>
+                                <input type="text" class="form-control" id="addPrice" placeholder="Enter Price" name="price">
+                            </div>
+                            <img id="addThumbnail">
+                            <input id="addThumbnailPath" type="hidden" name="picture">
+                            <div class="mb-3">
+                                <label for="addPicture" class="form-label">Picture</label>
+                                <input class="form-control" type="file" id="addPicture" name="file">
+                            </div>
+                            <div>
+                                <select class="form-select" id="addCategory" name="catid">
+                                    <option v-for="category in categories" :value="category.catid">{{ category.catName }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-success" data-bs-dismiss="modal" value="Add product">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- EDIT PRODUCT MODAL -->
+            <div class="modal fade" id="editProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form id="editForm" class="modal-content" method="post" enctype="multipart/form-data" target="dummyiframe">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editName" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="editName" placeholder="Name" name="pname">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label">Description: </label>
+                                <textarea class="form-control" id="editDescription" placeholder="Enter Product Description" name="pdescription"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPrice" class="form-label">Price</label>
+                                <input type="text" class="form-control" id="editPrice" placeholder="Enter Price" name="price">
+                            </div>
+                            <img class="thumbnail" id="editThumbnail">
+                            <input id="editThumbnailPath" type="hidden" name="picture">
+                            <div class="mb-3">
+                                <label for="editPicture" class="form-label">Picture</label>
+                                <input class="form-control" type="file" id="editPicture" name="file">
+                            </div>
+                            <div>
+                                <select class="form-select" id="editCategory" name="catid">
+                                    <option v-for="category in categories" :value="category.catid">{{ category.catName }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-success" data-bs-dismiss="modal" value="Update Product">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--DEAL MODAL-->
+            <div class="modal fade" id="editDeal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div id="editDealModal" class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="editDealTitle" class="modal-title"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <input id="hiddenPid" hidden>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editDiscount" class="form-label">Discount Persentage</label>
+                                <input type="text" class="form-control" id="editDiscount" placeholder="30">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteDeal()">DELETE</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="createDeal()">Create Deal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <div class="footerContainer">
+                <div class="map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d64740.70869202557!2d15.463327463033773!3d60.48562285003771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46677c2bb1581a89%3A0xfe3e60e13e164c99!2zQm9ybMOkbmdl!5e0!3m2!1ssv!2sse!4v1647432220970!5m2!1ssv!2sse" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div class="info">
+                    <h3>We are Comfy!</h3>
+                    <p>We are a new upcoming men's fashion store</p>
+                </div>
+                <div class="links">
+                    <h3>Links</h3>
+                    <a href="/about">About us</a>
+                </div>
+                <div class="icons">
+                    <h3>Contact Us</h3>
+                    <a href="#"><i class="fab fa-instagram"></i>Instagram</a>
+                    <a href="#"><i class="fab fa-twitter"></i>Twitter</a>
+                    <a href="#"><i class="fab fa-facebook-f"></i>Facebook</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    async function postData(url, data) {
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json();
+    }
+
+    async function putData(url, data) {
+        const response = await fetch(url, {
+            method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json();
+    }
+
+    async function getData(url, data) {
+        const response = await fetch(url, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json();
+    }
+    const vue = new  Vue({
+        el: '#user',
+        data: {
+            thisUser: {},
+            customers: [],
+            users: [],
+            orders: [],
+            products: [],
+            deals: [],
+            items: [],
+            categories: [],
+            ratings: [],
+            cartLength: 0,    
+        },
+        methods: {
+            async init() {
+                let self = this;
+                this.items = [];
+                const url = window.location.href.split('/');
+
+                await $.getJSON("/api/user", function(res) {
+                    if (!res.error) {
+                        self.thisUser = res[0];
+                    }
+                    else {
+                        alert(res.error)
+                    }
+                });
+
+                $.getJSON("/api/customers", function(res) {
+                    if(!res.error) {
+                        self.customers = res;
+                    }
+                    else{
+                        alert(res.error)
+                    }
+                });
+
+                $.getJSON("/api/users", function(res) {
+                    if(!res.error) {
+                        self.users = res;
+                    }
+                    else{
+                        alert(res.error)
+                    }
+                });
+
+                //ADMIN CRUDS
+                $.getJSON("/api/products", function(res) {
+                    if(!res.error) {
+                        self.products = res;
+                        
+                    }
+                    else{
+                        alert(res.error)
+                    }
+                });
+
+                $.getJSON("/api/deals", function(res) {
+                    if(!res.error) {
+                        self.deals = res;
+                    }
+                    else{
+                        alert(res.error)
+                    }
+                });
+
+
+                $.getJSON("/api/categories", function(res) {
+                    if(!res.error) {
+                        self.categories = res;
+                    }
+                    else{
+                        alert(res.error)
+                    }
+                });
+
+                $.getJSON("/api/ratings/user/" + self.thisUser.userid, function(res) {
+                    if(!res.error) {
+                        self.ratings = res;
+                    }
+                    else{
+                        alert(res.error)
+                    }
+                })
+                
+                if (self.thisUser.roles == "Admin") {
+                        await $.getJSON("/api/orders", function(res) {
+                        if(!res.error) {
+                            self.orders = res;
+                        }
+                        else{
+                            alert(res.error)
+                        }
+
+                        for (let i = 0; i < self.orders.length; ++i) {
+                            for (let j = 0; j < self.orders[i].items.length; ++j) {
+                                const product = self.products.find(product => product.pid == self.orders[i].items[j].pid)
+                                self.orders[i].items[j].pname = product.pname;
+                            } 
+                        }
+
+                    });
+                }
+                else {
+                    //Gets the orders connected to the user
+                    $.getJSON("/api/orders/user/" + self.thisUser.userid, function(ores){
+                        if (!ores.error) {
+                            self.orders = ores;
+                        }
+                        else{
+                            // No orders
+                        }
+
+                        for (let i = 0; i < self.orders.length; ++i) {
+                            for (let j = 0; j < self.orders[i].items.length; ++j) {
+                                const product = self.products.find(product => product.pid == self.orders[i].items[j].pid)
+                                self.orders[i].items[j].pname = product.pname;
+                            } 
+                        }
+                    });
+                }
+
+                this.updateCartLength();
+
+                let product;
+                for (let i = 0; i < this.deals.length; ++i) {
+                    product = this.products.find(e => e.pid == this.deals[i].pid);
+                    product.discount = this.deals[i].discount;
+                }
+            },
+
+            //PRODUCT CRUD
+            async getPlaceholders(pid) {
+                let product;
+
+                for (let i = 0; i < this.products.length; ++i) {
+                    if (this.products[i].pid == pid) {
+                        product = this.products[i];
+                        break;
+                    }
+                }
+
+                document.getElementById("editForm").action = "api/product/" + product.pid;
+                document.getElementById("editName").value = product.pname;
+                document.getElementById("editDescription").value = product.pdescription;
+                document.getElementById("editPrice").value = product.price;
+                document.getElementById("editThumbnail").src = product.picture;
+                document.getElementById("editThumbnailPath").value = product.picture;
+                let options = Array.from(document.getElementById("editCategory").options);
+                const optionToSelect = options.find(item => item.value == product.catid);
+                optionToSelect.selected = true;
+            },
+
+            openDealModal(pid) {
+                let product = this.products.find(e => e.pid == pid);
+                document.getElementById("editDealTitle").innerHTML = "Edit Deal for " + product.pname;
+                document.getElementById("hiddenPid").value = pid;
+                if (product.discount != undefined) {
+                    document.getElementById("editDiscount").value = product.discount * 100;
+                }
+                
+            },
+
+            async createDeal() {
+                let discount = document.getElementById("editDiscount").value;
+                const pid = document.getElementById("hiddenPid").value;
+
+                if (discount <= 0 || discount >= 100) {
+                    alert("Discount needs to be between 1 - 99 %");
+                    return;
+                }
+
+                await postData("/api/deal/"+ pid, {discount: discount / 100});
+            },
+
+            async deleteDeal() {
+                const pid = document.getElementById("hiddenPid").value;
+                await fetch("/api/deal/" + pid, {
+                    method: "DELETE"
+                })
+            },
+
+            async updateUserPlaceholders() {
+
+                document.getElementById("updateFirstname").value = this.thisUser.first_name;
+                document.getElementById("updateLastname").value = this.thisUser.last_name;
+                document.getElementById("updateEmail").value = this.thisUser.email;
+                document.getElementById("updateAddress").value = this.thisUser.address;
+            },
+
+            async updateCustomer() {
+                let data = {
+                    first_name: document.getElementById("updateFirstname").value,
+                    last_name: document.getElementById("updateLastname").value,
+                    email: document.getElementById("updateEmail").value,
+                    address: document.getElementById("updateAddress").value,
+                }
+                await putData("/api/customer/" + this.thisUser.cusid, data)
+                let user = this.thisUser;
+                await $.getJSON("/api/customer/" + user.cusid, async function (cusres) {
+                    if (cusres.error)
+                        return;
+                    
+                    user.first_name = cusres[0].first_name;
+                    user.last_name  = cusres[0].last_name;
+                    user.email      = cusres[0].email;
+                    user.address    = cusres[0].address;
+                });
+                this.thisUser = user;
+                
+                
+            },
+            
+            async postProduct(){
+                let data = {
+                    title: document.getElementById("addName").value,
+                    description: document.getElementById("addDescription").value,
+                    price: document.getElementById("addPrice").value,
+                    picture: document.getElementById("addPicture").files[0],
+                }
+
+                await postData("/api/product", data);
+                this.init();
+            },
+
+            async putProduct(){
+                const url = window.location.href.split('/');
+                const id = url[url.length -1];
+
+                let data = {
+                    title: document.getElementById("editName").value,
+                    description: document.getElementById("editDescription").value,
+                    price: document.getElementById("editPrice").value,
+                    picture: document.getElementById("editPicture").src,
+                }
+
+                await putData("/api/product/" + id, data);
+                this.init();
+            },
+
+            async delProduct(id) {
+                await fetch("/api/product/" + id, {
+                    method: "DELETE"
+                });
+                this.init();
+            },
+            
+            async delRating(id) {
+                await fetch("/api/rating/" + id, {
+                    method: "DELETE"
+                });
+                this.init();
+            },
+
+            updateCartLength() {
+                let cartLength = 0;
+                for (let key in localStorage) {
+                    if (!localStorage.hasOwnProperty(key)) continue; 
+                    if (isNaN(key)) continue;
+                    ++cartLength;
+                }
+
+                this.cartLength = cartLength;
+            },
+            async onSignIn(gUser) {
+                let self = this;
+                let id_token = gUser.getAuthResponse().id_token;
+
+                let res = await postData("/api/login", { token: id_token });
+                let user = res.user[0];
+
+                await $.getJSON("/api/customer/" + user.cusid, async function (cusres) {
+                    if (cusres.error)
+                        return;
+                    
+                    user.first_name = cusres[0].first_name;
+                    user.last_name  = cusres[0].last_name;
+                    user.email      = cusres[0].email;
+                    user.address    = cusres[0].address;
+                });
+                self.thisUser = user;
+            },
+            onSignOut() {
+                gapi.auth2.getAuthInstance().signOut();
+
+                $.getJSON("/api/logout", function (res) {
+                    if (res.error) {
+                        console.log(error);
+                    }
+                    else {
+                        location.href = "/"
+                    }
+                });
+            },
+            toogleOrder(index) {
+                this.isActive = index;
+            }
+        },
+        mounted() {
+            gapi.signin2.render('google-signin-button', {
+                onsuccess: this.onSignIn
+            });
+            this.init();
+        }
+    })
+</script>

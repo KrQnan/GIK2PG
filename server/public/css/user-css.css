@@ -1,0 +1,236 @@
+* {
+  padding:0;
+  margin:0;
+}
+body{
+  height:100%;
+  background: #303030;
+  display: flex;
+  flex-direction: column;
+}
+  
+ /*MENU CSS */
+.menu{
+  display:flex;
+  margin:auto;
+  width:95%;
+  justify-content: space-around;
+}
+
+.logo h2{
+  margin-top:2rem;
+  margin-bottom: 2rem;
+  font-family: 'Mochiy Pop P One', sans-serif;
+  text-align: center;
+  color: #FFF;
+}
+
+.menu .btn {
+  display:block;
+  background: #303030;
+  padding:20px;
+  width:100%;
+  height: 100%;
+  border-radius: 0;
+  text-transform: uppercase;
+  color: #fff;
+  transition: 0.5s ease all;
+}
+
+ .menu .btn:hover {
+  transform:translate(0,20px);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  background: #cabe98;
+  color:#303030
+}
+
+.userButtons{
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem;
+  width: 70%;
+  gap:1rem;
+}
+.userButtons .btn{
+  background-color: lightgrey;
+  transition: 0.5s ease all;
+  
+}
+
+.userButtons .btn:hover{
+  background-color: transparent;
+  border: lightgray 1px solid;
+  color:white;
+  transform: translate(0,5px);
+}
+.container-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.container{
+    width: 75%;
+    padding: 12px 12px;
+    margin-top: 3rem;
+}
+
+.container h3{
+  text-decoration: underline;
+}
+
+.customer{
+  display: flex;
+  flex-direction: column;
+  background: lightgrey;
+  color:#303030;
+  display: flex;
+  border-radius: 20px;
+}
+
+.order{
+  background-color: lightgray;
+  border-radius: 20px;
+}
+
+.rating{
+  background-color: lightgray;
+  border-radius: 20px;
+}
+
+.rating .accordion-body{
+  display:flex;
+  gap:1rem;
+  align-items: center;
+}
+.rating .accordion-body p{
+  margin:0;
+}
+
+.rating .accordion-body .btn{
+  align-items: center;
+  border: #303030 solid 1px;
+}
+
+.rating .accordion-body .btn:hover{
+  background-color: #303030;
+  color: white;
+}
+
+.product{
+  background-color: lightgray;
+  border-radius: 20px;
+}
+
+.tables{
+  border-radius: 20px;
+  display:flex;
+  flex-direction: row;
+  gap:2rem;
+}
+
+.productButtons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.productButtons .btn{
+  border:#303030 1px solid;
+  transition: 0.5s ease all;
+}
+
+.productButtons .btn:hover{
+  transform: translate(0,3px);
+  background-color: #303030;
+  color:#fff;
+}
+
+.item-button{
+  width:100%;
+  text-align: start;
+  transition: 0.5s ease all;
+  text-decoration: none;
+  color:#303030;
+}
+
+.item-button:hover{
+  transform: none;
+  color:#fff;
+  background-color: #303030;
+}
+.accordion-product{
+  display: flex;
+  gap:1rem;
+}
+
+.table-rows .btn{
+  transition: 0.5s ease all;
+}
+
+.table-rows .btn:hover{
+  transform: translate(0,4px);
+  background: #303030;
+  color:#fff
+}
+.thumbnail {
+  width: 64px;
+  height: auto;
+}
+
+.item-button{
+  width:100%;
+  text-align: start;
+  transition: 0.5s ease all;
+  text-decoration: none;
+  color:#303030;
+}
+
+.item-button:hover{
+  transform: none;
+  color:#fff;
+  background-color: #303030;
+}
+
+.accordion-product{
+  display: flex;
+  gap:1rem;
+}
+  /* FOOTER CSS */
+footer{
+  margin-top:8rem;
+  flex-shrink: 0;
+}
+
+.footerContainer{
+color:#fff;
+bottom: 0;
+height: 2.5rem; 
+display: flex;
+justify-content: space-around;
+
+}
+
+.info{
+text-align: center;
+}
+
+.links a{
+color:#fff;
+}
+
+
+
+.icons{
+display: flex;
+flex-direction: column;
+}
+
+.icons a {
+color:#fff;
+}
+
+.icons i {
+width: 25px;
+}

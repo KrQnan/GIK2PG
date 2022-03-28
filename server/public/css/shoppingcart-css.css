@@ -1,0 +1,177 @@
+@import url("https://fonts.googleapis.com/css2?family=Istok+Web:wght@400;700&display=swap");
+
+* {
+    padding:0;
+    margin:0;
+}
+body{
+    height:100%;
+    background: #303030;
+    display: flex;
+    flex-direction: column;
+}
+
+/*MENU CSS */
+
+.menu{
+    display:flex;
+    margin:auto;
+    width:95%;
+    justify-content: space-around;
+}
+  
+.logo h2{
+    margin-top:2rem;
+    margin-bottom: 2rem;
+    font-family: 'Mochiy Pop P One', sans-serif;
+    text-align: center;
+    color: #FFF;
+}
+
+.menu .btn {
+    display:block;
+    padding:20px;
+    width:100%;
+    height: 100%;
+    border-radius: 0;
+    text-transform: uppercase;
+    color: #fff;
+    transition: 0.5s ease all;
+}
+
+.btn:hover {
+    transform:translate(0,20px);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    background: #cabe98;
+    color:#303030
+}
+/* CONTENT CSS*/
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 75%;
+    margin:auto;
+}
+
+.table {
+    margin-top: 2rem;
+    color:#fff;
+}
+
+td .btn {
+    font-weight: 700;
+    min-width: 4rem;
+    background: #fff;
+    transition: 0.5s ease all;
+}
+
+td .btn:hover {
+    background: #cabe98;
+    transform:scale(1.1,1.1);
+}
+
+.thumbnail {
+    width: 32px;
+    height: auto;
+}
+.cartTotal{
+    width: 100%;
+    text-align: start;
+    color:white
+}
+
+.orderContainer{
+    display:flex;
+    flex-direction: row;
+    width: 100%;
+    color:#fff;
+    gap: 2rem;
+}
+.orderInformation {
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    justify-content: flex-start;
+}
+
+.orderAddress{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+
+}
+
+.orderAddress .item{
+    width: 25%;
+    display:flex;
+    flex-direction: column;
+}
+
+.klarna-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #cabe98;
+}
+.klarnaButtons{
+    margin:1rem;
+    width: 100%;
+}
+
+.klarnaButtons .btn {
+    background: #fff;
+    transition: 0.5s ease all;
+}
+
+.klarnaButtons .btn:hover {
+    background: #cabe98;
+    transform:scale(1.1,1.1);
+}
+
+/* FOOTER CSS */
+footer{
+    margin-top:8rem;
+    flex-shrink: 0;
+}
+
+.footerContainer{
+  color:#fff;
+  bottom: 0;
+  height: 2.5rem; 
+  display: flex;
+  justify-content: space-around;
+  
+}
+
+.info{
+  text-align: center;
+}
+
+.links a{
+  color:#fff;
+}
+
+
+
+.icons{
+  display: flex;
+  flex-direction: column;
+}
+
+.icons a {
+  color:#fff;
+}
+
+.icons i {
+  width: 25px;
+}
+
+h1.ex1 {
+    color:white; 
+    padding-left: 120px;
+    padding-top: 120px;
+  }

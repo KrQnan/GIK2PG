@@ -1,0 +1,231 @@
+* {
+  padding:0;
+  margin:0;
+}
+body{
+  height:100%;
+  background: #303030;
+  display: flex;
+  flex-direction: column;
+}
+ /* MENU CSS */
+  .menu{
+  display:flex;
+  margin:auto;
+  width:95%;
+  justify-content: space-around;
+}
+.logo h2{
+  margin-top:2rem;
+  margin-bottom: 2rem;
+  font-family: 'Mochiy Pop P One', sans-serif;
+  text-align: center;
+  color: #FFF;
+}
+
+.menu .btn {
+  display:block;
+  background: #303030;
+  padding:20px;
+  width:100%;
+  height: 100%;
+  border-radius: 0;
+  text-transform: uppercase;
+  color: #fff;
+  transition: 0.5s ease all;
+}
+
+.btn:hover {
+  transform:translate(0,20px);
+  
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  background: #cabe98;
+  color:#303030
+}
+
+/* CATEGORY MENU */
+.categoryContainer{
+  width: 50%;
+  margin-top: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.categoryMenu{
+  text-align: center;
+}
+
+.categoryMenu .btn{
+  display:block;
+  background: #303030;
+  padding:20px;
+  width:100%;
+  height: 100%;
+  border-radius: 0;
+  text-transform: uppercase;
+  color: #fff;
+  transition: 0.5s ease all;
+}
+
+.categoryMenu .btn:hover{
+  border-bottom:#cabe98 solid 1px
+}
+
+.categoryMenu ul{
+  list-style: none;
+  padding: 0;
+}
+/* CARD CSS */
+.productContainer{
+  margin-top: 2rem;
+  display:flex;
+  flex: 1 0 auto;
+  width: 100%;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cardCategories {
+  position: relative;
+  width: 18rem;
+  height: 33rem;
+  background: #ececec;
+  overflow: hidden;
+  margin: 0.2rem;
+  border-radius: 0;
+  transition: 0.5s;
+}
+
+.cardCategories:hover{
+  transform:scale(1.1);
+}
+
+.cardCategories::before {
+  content: "";
+  position: absolute;
+  left:0;
+  right: 0;
+  top: -50%;
+  width: 100%;
+  height: 100%;
+  background: #cabe98;
+  transform: skewY(345deg);
+  transition: 0.5s;
+}
+
+.cardCategories:hover::before {
+  top: -70%;
+  transform: skewY(390deg);
+}
+
+.cardCategories::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-weight: 600;
+  font-size: 6em;
+  color: rgba(0, 0, 0, 0.1);
+}
+
+.cardCategories .imgBox {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  z-index: 1;
+}
+
+.cardCategories .contentBox {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.cardCategories .contentBox h3 {
+  font-size: 18px;
+  color: rgb(56, 56, 56);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cardCategories .contentBox .price {
+  font-size: 25px;
+  color: rgb(253, 6, 6);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.cardCategories .contentBox .buy {
+  position: relative;
+  top: 100px;
+  opacity: 0;
+  padding: 8px 25px;
+  margin-bottom: 11px;
+  color: #000000;
+  text-decoration: none;
+  background: #cabe98;
+  border-radius: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.5s;
+}
+
+.cardCategories:hover .contentBox .buy {
+  top: 0;
+  opacity: 1;
+}
+
+.mouse {
+  height: 300px;
+  width: auto;
+}
+
+/* FOOTER CSS */
+footer{
+  margin-top:8rem;
+  flex-shrink: 0;
+}
+
+.footerContainer{
+color:#fff;
+bottom: 0;
+height: 2.5rem; 
+display: flex;
+justify-content: space-around;
+
+}
+
+.info{
+text-align: center;
+}
+
+.links a{
+color:#fff;
+}
+
+
+
+.icons{
+display: flex;
+flex-direction: column;
+}
+
+.icons a {
+color:#fff;
+}
+
+.icons i {
+width: 25px;
+}
+

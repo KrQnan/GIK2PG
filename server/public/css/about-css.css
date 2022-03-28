@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap');
+
+* {
+  padding:0;
+  margin:0;
+}
+body{
+  height:100%;
+  background: #303030;
+  display: flex;
+  flex-direction: column;
+}
+
+  /* MENU CSS*/
+.menu{
+  display:flex;
+  margin:auto;
+  width:100%;
+  justify-content: space-around;
+}
+
+.menu a{
+  display: flex;
+  margin:0;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo h2{
+  margin-top:2rem;
+  margin-bottom: 2rem;
+  font-family: 'Mochiy Pop P One', sans-serif;
+  text-align: center;
+  color: #FFF;
+}
+
+.menu .btn {
+  display:block;
+  background: #303030;
+  padding:20px;
+  width:100%;
+  height: 100%;
+  border-radius: 0;
+  text-transform: uppercase;
+  color: #fff;
+  transition: 0.5s ease all;
+}
+
+.btn:hover {
+  transform:translate(0,20px);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  background: #cabe98;
+  color:#303030
+}
+
+/*END MENU*/
+  
+/*MAIN CSS*/
+  h1{
+    color:#ffffff;
+    font-weight:100;
+    font-size: 4em;
+    text-align: center;
+  }
+h2{
+  color:#ffffff;
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container p{
+    color: white;
+    text-align: center;
+}
+
+.shipping{
+  display:flex;
+  justify-content: space-around;
+  gap:1rem;
+}
+
+.shipping h2{
+  color:#303030;
+}
+
+.shipping .item{
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+  height: 200px;
+  background-color: #cabe98;
+  border-radius: 20px;
+  transition: 0.5s ease all;
+}
+
+
+.shipping .item:hover{
+  background-color: #fff;
+}
+
+.item i{
+  display:flex;
+  align-items:center ;
+  justify-content: center;
+  color:#303030;
+}
+
+.item p{
+  color:#303030;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+p {
+  text-align: center;
+  margin: 0;
+}
+/*END MAIN CSS*/
+
+/*FOOTER CSS*/
+
+footer{
+  margin-top:8rem;
+  flex-shrink: 0;
+}
+
+.footerContainer{
+color:#fff;
+bottom: 0;
+height: 2.5rem; 
+display: flex;
+justify-content: space-around;
+
+}
+
+.info{
+text-align: center;
+}
+
+.links a{
+color:#fff;
+}
+
+.shipping {
+  display: flex;
+  flex-direction: row;
+}
+
+.icons{
+display: flex;
+flex-direction: column;
+}
+
+.icons a {
+color:#fff;
+}
+
+.icons i {
+width: 25px;
+}
+
+/*END FOOTER*/
